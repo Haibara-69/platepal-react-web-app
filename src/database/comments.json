@@ -1,0 +1,17 @@
+[
+    {
+      "commentID": "c1",
+      "recipeID": "r1",
+      "userID": "u2",
+      "text": "This recipe was amazing! My family loved it.",
+      "createdDate": "2024-03-05T12:00:00Z"
+    },
+    {
+      "commentID": "c2",
+      "recipeID": "r2",
+      "userID": "u2",
+      "text": "Simple and healthy. Highly recommend!",
+      "createdDate": "2024-03-06T09:30:00Z"
+    }
+  ]
+  

@@ -1,0 +1,15 @@
+[
+    {
+      "ratingID": "rt1",
+      "recipeID": "r1",
+      "userID": "u2",
+      "ratingValue": 5
+    },
+    {
+      "ratingID": "rt2",
+      "recipeID": "r2",
+      "userID": "u2",
+      "ratingValue": 4
+    }
+  ]
+  

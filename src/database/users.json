@@ -1,0 +1,23 @@
+[
+    {
+      "userID": "u1",
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "password123",
+      "role": "Cook",
+      "followers": 120,
+      "following": 45,
+      "createdAt": "2024-01-01T12:00:00Z"
+    },
+    {
+      "userID": "u2",
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "password": "password456",
+      "role": "Viewer",
+      "followers": 15,
+      "following": 10,
+      "createdAt": "2024-02-01T15:30:00Z"
+    }
+  ]
+  
