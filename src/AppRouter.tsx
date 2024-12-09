@@ -8,6 +8,7 @@ import RecipeDetails from './pages/RecipeDetails';
 import PostRecipe from './pages/PostRecipe';
 import Navbar from './components/Navbar';
 import Register from './pages/Register';
+import TeamGithub from './pages/TeamGithub';
 
 const AppRouter: React.FC = () => (
   <Router>
@@ -15,6 +16,7 @@ const AppRouter: React.FC = () => (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/search" element={<Search />} />
+      <Route path="/team-github" element={<TeamGithub />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/profile/:userID" element={<Profile />} />
