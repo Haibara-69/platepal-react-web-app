@@ -18,5 +18,9 @@ export interface User {
     cuisine: string;
     createdAt: string; // Renamed to match the backend
     image: string;
+    createdBy: {
+      _id: string;
+      username: string; // The creator's username
+    };
   }
   
