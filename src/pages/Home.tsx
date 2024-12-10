@@ -32,7 +32,7 @@ const Home: React.FC = () => {
             onClick={() => navigate(`/details/${recipe._id}`)}>
             <div className="card">
               <img
-                src={recipe.image}
+                src={`http://localhost:8080${recipe.image}`}
                 className="card-img-top"
                 alt={recipe.title}
                 style={{ width: '100%', height: '200px', objectFit: 'cover' }}

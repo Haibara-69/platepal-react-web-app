@@ -212,3 +212,46 @@ export const fetchCurrentUserProfile = async () => {
     throw new Error('Failed to fetch current user profile.');
   }
 };
+
+export const fetchAllUsers = async () => {
+  try {
+    const response = await api.get('/api/users'); // Backend route to fetch all users
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching all users:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Failed to fetch all users.');
+  }
+};
+
+export const addUser = async (userData: any) => {
+  try {
+    const response = await api.post('/api/users', userData);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error adding user:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Failed to add user.');
+  }
+};
+
+export const deleteUser = async (userId: string) => {
+  try {
+    const response = await api.delete(`/api/users/${userId}`);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error deleting user:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Failed to delete user.');
+ 
+  }
+};
+
+export const editUser = async (userId: string, userData: any) => {
+  try {
+    const response = await api.put(`/api/users/${userId}`, userData);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error updating user:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Failed to update user.');
+  }
+};
+
+

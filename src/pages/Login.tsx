@@ -67,9 +67,9 @@ const Login: React.FC = () => {
       const userData = await login(email, password); // Call login API
       console.log(userData); 
       localStorage.setItem('user', JSON.stringify(userData)); // Store user in localStorage
-      const displayName = userData?.name?.trim() || userData?.username?.trim() || 'User';
+      //const displayName = userData?.name?.trim() || userData?.username?.trim() || 'User';
 
-      alert(`Welcome, ${displayName}!`);
+      //alert(`Welcome, ${displayName}!`);
       navigate(`/profile/${userData.id}`); // Redirect to the Profile page with user ID
     } catch (err) {
       console.error('Login failed:', err);
