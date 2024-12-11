@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  fetchUserProfile,
-  fetchUserRecipes,
-  updateUserProfile,
-  fetchAllUsers,
-  addUser,
-  deleteUser,
-  editUser, // Import the edit user function
-} from '../services/apiService';
+import { fetchUserProfile, fetchUserRecipes, updateUserProfile,
+  fetchAllUsers, addUser, deleteUser, editUser, fetchFavoriteRecipes} from '../services/apiService';
 
 const Profile: React.FC = () => {
   const { userID } = useParams<{ userID: string }>();
   const [profile, setProfile] = useState({ id: '', username: '', email: '', role: '',password: '',});
   const [recipes, setRecipes] = useState<any[]>([]);
+  const [favoriteRecipes, setFavoriteRecipes] = useState<any[]>([]);
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [newUser, setNewUser] = useState({ username: '', email: '', password: '', role: 'Cook' });
   const [editMode, setEditMode] = useState(false); // Store the ID of the user being edited
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'profile' | 'allUsers'>('profile'); // State to toggle views
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}'); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,6 +37,19 @@ const Profile: React.FC = () => {
 
     loadUserProfile();
   }, [userID]);
+
+  useEffect(() => {
+    const loadFavoriteRecipes = async () => {
+      try {
+        const favorites = await fetchFavoriteRecipes(userID!);
+        setFavoriteRecipes(favorites);
+      } catch (error) {
+        console.error("Error loading favorite recipes:", error);
+      }
+    };
+  
+    loadFavoriteRecipes();
+  }, [userID]);  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -106,12 +114,19 @@ const Profile: React.FC = () => {
     return <p>Loading...</p>;
   }
 
+  const isOwnProfile = currentUser.id === userID;
+
   return (
     <div className='container'>
       <div className="d-flex justify-content-between mb-4">
         <button
           className={`btn ${view === 'profile' ? 'btn-primary' : 'btn-outline-primary'}`}
-          onClick={() => setView('profile')}
+          onClick={() => {
+            setView('profile');
+            if (currentUser.id) {
+              navigate(`/profile/${currentUser.id}`);
+            }
+          }}
         >
           My Profile
         </button>
@@ -150,7 +165,7 @@ const Profile: React.FC = () => {
                 />
               </label>
               <br /><br />
-              <label>
+              {/* <label>
                 Role:
                 <input
                   type="text"
@@ -159,7 +174,7 @@ const Profile: React.FC = () => {
                   onChange={handleInputChange}
                 />
               </label>
-              <br /><br />
+              <br /><br /> */}
               <label>
                   Password:
                   <input
@@ -183,41 +198,77 @@ const Profile: React.FC = () => {
           ) : (
             <div>
               <p>Username: {profile.username}</p>
-              <p>Email: {profile.email}</p>
-              <p>Role: {profile.role}</p>
-              <p>Password: ********</p>
-              <button className='btn btn-primary' onClick={() => setEditMode(true)}>
+              {isOwnProfile && <p>Email: {profile.email}</p>}
+              {/* {isOwnProfile && <p>Role: {profile.role}</p>} */}
+              {isOwnProfile && <p>Password: ********</p>}
+              {isOwnProfile && (<button className='btn btn-primary' onClick={() => setEditMode(true)}>
                 Edit
               </button>
+              )}
             </div>
           )}
           <hr />
+          
           <h2>{profile.username}'s Recipes</h2>
-          {recipes.length === 0 ? (
-            <p>No recipes found.</p>
-          ) : (
-            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-              {recipes.map((recipe) => (
-                <div key={recipe._id} style={{ width: '300px', cursor: "pointer" }}
-                  onClick={() => navigate(`/details/${recipe._id}`)}>
-                  <div className='card'>
-                    <img
-                      src={recipe.image}
-                      className="card-img-top"
-                      alt={recipe.title}
-                      style={{ width: '100%', height: '200px', objectFit: 'cover' }}
-                    />
-                    <div className="card-body">
-                      <h5 className='card-title'>{recipe.title}</h5><br />
-                      <p>{recipe.description}</p>
-                      <p>Tags: {recipe.tags?.join(", ")}</p>
-                      <p>Cuisine: {recipe.cuisine || "N/A"}</p>
+            {recipes.length === 0 ? (
+              <p>No recipes found.</p>
+            ) : (
+              <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                {recipes
+                  .filter((recipe) => recipe) // Exclude null or undefined entries
+                  .map((recipe) => (
+                    <div key={recipe?._id} style={{ width: '300px', cursor: 'pointer' }}
+                      onClick={() => navigate(`/details/${recipe._id}`)}>
+                      <div className="card">
+                        <img
+                          src={`http://localhost:8080${recipe.image}`}
+                          className="card-img-top"
+                          alt={recipe?.title || 'Recipe Image'}
+                          style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                        />
+                        <div className="card-body">
+                          <h5 className="card-title">{recipe?.title || 'Unknown Title'}</h5>
+                          <p>{recipe?.description || 'No description available.'}</p>
+                          <p>Tags: {recipe?.tags?.join(', ') || 'None'}</p>
+                          <p>Cuisine: {recipe?.cuisine || 'N/A'}</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                  ))}
+              </div>
+            )}
+          <br /><hr />
+        
+          <h2>{profile.username}'s Favorite Recipes</h2>
+            {favoriteRecipes.length === 0 ? (
+              <p>No favorite recipes found.</p>
+            ) : (
+              <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                {favoriteRecipes
+                  .filter((recipe) => recipe) // Exclude null or undefined entries
+                  .map((recipe) => (
+                    <div key={recipe?._id} style={{ width: '300px', cursor: 'pointer' }}
+                      onClick={() => navigate(`/details/${recipe._id}`)}>
+                      <div className="card">
+                        <img
+                          //src={recipe?.image ? `http://localhost:8080${recipe.image}` : 'default-image.png'}
+                          src={`http://localhost:8080${recipe.image}`}
+                          className="card-img-top"
+                          alt={recipe?.title || 'Favorite Recipe Image'}
+                          style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                        />
+                        <div className="card-body">
+                          <h5 className="card-title">{recipe?.title || 'Unknown Title'}</h5>
+                          <p>{recipe?.description || 'No description available.'}</p>
+                          <p>Tags: {recipe?.tags?.join(', ') || 'None'}</p>
+                          <p>Cuisine: {recipe?.cuisine || 'N/A'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+
         </div>
       )}
 
@@ -344,5 +395,3 @@ const Profile: React.FC = () => {
 };
 
 export default Profile;
-
-

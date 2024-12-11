@@ -96,7 +96,7 @@ const Login: React.FC = () => {
         required
         style={{ marginBottom: '10px', display: 'block' }}
       />
-      <button type="submit">Login</button>
+      <button className='btn btn-primary' type="submit">Login</button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </form>
   );

@@ -30,7 +30,17 @@ const Search = () => {
     };
 
     fetchTagsAndCategories();
-  }, []);
+
+    const savedSearch = JSON.parse(localStorage.getItem("searchData") || "{}");
+      if (savedSearch) {
+        setQuery(savedSearch.query || "");
+        setTag(savedSearch.tag || "");
+        setCategory(savedSearch.category || "");
+        setType(savedSearch.type || "recipes");
+        setResults(savedSearch.results || []);
+      }
+    }, []);
+
 
   const handleSearch = async () => {
     try {
@@ -42,6 +52,10 @@ const Search = () => {
         data = await searchUsers(query, currentUser.id); // Pass current user ID
       }
       setResults(data); // Ensure results include `followers`, `following`, and `isFollowing`
+      localStorage.setItem(
+        "searchData",
+        JSON.stringify({ query, tag, category, type, results: data })
+      );
     } catch (err) {
       setError("Failed to fetch search results.");
       console.error(err);
@@ -116,7 +130,7 @@ const Search = () => {
               ))}
             </select>
             <select value={category} onChange={(e) => setCategory(e.target.value)}>
-              <option value="">Select a category</option>
+              <option value="">Select a cuisine</option>
               {categories.map((categoryOption) => (
                 <option key={categoryOption} value={categoryOption}>
                   {categoryOption}
@@ -137,21 +151,36 @@ const Search = () => {
       <div className="results">
         {type === "recipes" &&
           results.map((recipe) => (
-            <div key={recipe._id} className="card">
-              <h2>{recipe.title}</h2>
-              <p>{recipe.description}</p>
-              <p>Tags: {recipe.tags?.join(", ")}</p>
-              <p>Category: {recipe.cuisine || "N/A"}</p>
+            <div key={recipe._id} style={{ width: '300px', cursor: "pointer" }}
+              onClick={() => navigate(`/details/${recipe._id}`)}>
+              <div className='card'>
+                <img
+                  src={`http://localhost:8080${recipe.image}`}
+                  className="card-img-top"
+                  alt={recipe.title}
+                  style={{ width: '100%', height: '200px', objectFit: 'cover' }}
+                />
+                <div className="card-body">
+                  <h5 className='card-title'>{recipe.title}</h5><br />
+                  <p>{recipe.description}</p>
+                  <p>Tags: {recipe.tags?.join(", ")}</p>
+                  <p>Cuisine: {recipe.cuisine || "N/A"}</p>
+                </div>
+              </div>
             </div>
           ))}
         {type === "users" &&
           results.map((user) => (
-            <div key={user._id} className="profile-card">
+            <div key={user._id} className="profile-card"
+              onClick={() => navigate(`/profile/${user._id}`)} style={{ cursor: "pointer" }}>
             <h2>{user.username}</h2>
             <p>
               <span
                 className="link"
-                onClick={() => navigate(`/followers/${user._id}`)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/followers/${user._id}`)
+                }}
                 style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
               >
                 Followers: {user.followers ?? 0} {/* Show counts */}
@@ -160,7 +189,10 @@ const Search = () => {
             <p>
               <span
                 className="link"
-                onClick={() => navigate(`/following/${user._id}`)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/following/${user._id}`)
+                }}
                 style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
               >
                 Following: {user.following ?? 0} {/* Show counts */}

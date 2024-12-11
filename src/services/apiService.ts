@@ -1,7 +1,6 @@
 import axios from 'axios';
 // const getToken = () => localStorage.getItem('token');
 const getToken = () => {
-  // Replace `localStorage` with session storage, context, or other storage mechanism if needed
   const token = localStorage.getItem("token");
   console.log("Token for API requests:", token);
   if (!token) {
@@ -31,6 +30,67 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+export const addLike = async (userId: string, recipeId: string) => {
+  const response = await api.post("/api/likes", { userId, recipeId });
+  return response.data;
+};
+
+export const removeLike = async (userId: string, recipeId: string) => {
+  const response = await api.delete("/api/likes", {
+    data: { userId, recipeId },
+  });
+  return response.data;
+};
+
+export const hasLikedRecipe = async (userId: string, recipeId: string) => {
+  const response = await api.get("/api/likes/status", {
+    params: { userId, recipeId },
+  });
+  return response.data;
+};
+
+export const countLikesByRecipe = async (recipeId: string) => {
+  const response = await api.get(`/api/likes/recipe/${recipeId}`);
+  return response.data.count;
+};
+
+export const fetchFavoriteRecipes = async (userId: string) => {
+  try {
+    const response = await api.get(`/api/users/${userId}/favorites`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching favorite recipes:", error);
+    throw new Error("Failed to fetch favorite recipes.");
+  }
+};
+
+export const fetchComments = async (recipeId: string) => {
+  const response = await api.get(`/api/comments/recipe/${recipeId}`);
+  return response.data;
+};
+
+export const addComment = async (userId: string, recipeId: string, text: string, role: string) => {
+  const response = await api.post("/api/comments", { userId, recipeId, text, role });
+  return response.data;
+};
+
+export const updateComment = async (commentId: string, userId: string, text: string) => {
+  try {
+    const response = await api.put(`/api/comments/${commentId}`, { userId, text });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error updating comment:", error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || "Failed to update comment.");
+  }
+};
+
+export const deleteComment = async (commentId: string, userId: string, role: string) => {
+  const response = await api.delete(`/api/comments/${commentId}`, {
+    data: { userId, role },
+  });
+  return response.data;
+};
 
 export const fetchUserRecipes = async (userId: string) => {
   try {

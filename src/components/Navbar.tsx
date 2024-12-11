@@ -52,6 +52,8 @@ const Navbar: React.FC = () => {
 
     return (
         <nav>
+            <h2 style={{ margin: 0, fontWeight: 'bold' }}> Welcome to PlatePal 🍽</h2>
+            <br />
             <Link to="/">Home</Link>
             <Link to="/search">Search</Link>
             
@@ -59,16 +61,16 @@ const Navbar: React.FC = () => {
                 <>
                     <Link to="/register">Register</Link>
                     <Link to="/login">Login</Link>
+                    <Link to="/team-github">Team & GitHub</Link>
                 </>
             ) : (
                 <>
-                    {user.role === 'Cook' && <Link to="/post-recipe">Post Recipe</Link>}
-                    {user.role === 'Viewer' && <Link to="/favorites">Favorites</Link>}
-                    <Link to={`/profile/${user.id}`}>Profile</Link> {/* Add Profile link */}
+                    {(user.role === 'Cook' || user.role === 'Admin') && (<Link to="/post-recipe">Post Recipe</Link>)}
+                    <Link to={`/profile/${user.id}`}>Profile</Link>
+                    <Link to="/team-github">Team & GitHub</Link>
                     <button onClick={handleLogout}>Logout</button>
                 </>
             )}
-            <Link to="/team-github">Team & GitHub</Link>
         </nav>
     );
 };

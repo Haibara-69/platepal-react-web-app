@@ -37,9 +37,7 @@ const PostRecipe: React.FC = () => {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
-    
-
+  useEffect(() => { 
     if (recipeID) {
       const loadRecipe = async () => {
         try {
@@ -57,15 +55,12 @@ const PostRecipe: React.FC = () => {
     setRecipe({ ...recipe, [field]: e.target.value });
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!recipe.title || !recipe.ingredients.length || !recipe.steps.length) {
         alert('Please fill in all required fields: title, ingredients, and steps.');
         return;
     }
-
     try {
       console.log("User ID being sent:", user.id);
         // Create a FormData object
@@ -83,7 +78,6 @@ const PostRecipe: React.FC = () => {
         if (recipe.image && typeof recipe.image !== 'string') {
             formData.append('image', recipe.image); // Append file if image is a File object
         }
-
         if (recipeID) {
             await updateRecipe(recipeID, formData);
             alert('Recipe updated successfully!');
@@ -91,21 +85,24 @@ const PostRecipe: React.FC = () => {
             await addRecipe(formData);
             alert('Recipe added successfully!');
         }
-
         navigate('/');
     } catch (error) {
         console.error('Error saving recipe:', error);
         alert('Failed to save the recipe.');
     }
-};
+  };
 
+  const handleCancel = () => {
+    if (recipeID) {
+      navigate(`/details/${recipeID}`); 
+    } else {
+      navigate('/'); 
+    }
+  };
 
   if (!user || !user.id) {
     return <p>Please log in to post a recipe. <a href="/login">Go to Login</a></p>;
   }
-
- 
-
 
   return (
     <div className='container'>
@@ -117,18 +114,19 @@ const PostRecipe: React.FC = () => {
         <br />
         <input
           type="text"
+          style={{ width: '60%', fontSize: '16px' }}
           placeholder="Title"
           value={recipe.title}
           onChange={(e) => handleChange(e, 'title')}
           required
         />
         <br /><br />
-
     
         {/* Description */}
         <label>Description:</label>
         <br />
         <textarea
+          style={{ width: '60%', height: "100px", fontSize: '16px' }}
           placeholder="Description"
           value={recipe.description}
           onChange={(e) => handleChange(e, 'description')}
@@ -139,6 +137,7 @@ const PostRecipe: React.FC = () => {
         <label>Ingredients (Add each ingredient on a new line):</label>
         <br />
         <textarea
+          style={{ width: '60%', height: "100px", fontSize: '16px' }}
           placeholder="Enter ingredients"
           value={recipe.ingredients.join('\n')}
           onChange={(e) =>
@@ -155,6 +154,7 @@ const PostRecipe: React.FC = () => {
         <label>Steps (Add each step on a new line):</label>
         <br />
         <textarea
+          style={{ width: '60%', height: "100px", fontSize: '16px' }}
           placeholder="Enter cooking steps"
           value={recipe.steps.join('\n')}
           onChange={(e) =>
@@ -171,6 +171,7 @@ const PostRecipe: React.FC = () => {
         <br />
         <input
           type="text"
+          style={{ width: '60%', fontSize: '16px' }}
           placeholder="Cuisine (e.g., Italian, Indian)"
           value={recipe.cuisine}
           onChange={(e) => handleChange(e, 'cuisine')}
@@ -182,6 +183,7 @@ const PostRecipe: React.FC = () => {
         <br />
         <input
           type="text"
+          style={{ width: '60%', fontSize: '16px' }}
           placeholder="Tags (e.g., Dinner, Pasta)"
           value={recipe.tags.join(',')}
           onChange={(e) =>
@@ -230,8 +232,18 @@ const PostRecipe: React.FC = () => {
         />
         <br /><br /><br />
     
-        {/* Submit Button */}
-        <button type="submit">{recipeID ? 'Update Recipe' : 'Submit Recipe'}</button>
+        {/* Buttons */}
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button className="btn btn-primary" type="submit">
+            {recipeID ? 'Update Recipe' : 'Submit Recipe'}
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
