@@ -52,7 +52,7 @@ const Navbar: React.FC = () => {
 
     return (
         <nav>
-            <h2 style={{ margin: 0, fontWeight: 'bold' }}> Welcome to PlatePal 🍽</h2>
+            <h2 style={{ margin: 0, fontWeight: 'bold' }}> Welcome to PlatePal 🍽 </h2>
             <br />
             <Link to="/">Home</Link>
             <Link to="/search">Search</Link>

@@ -12,6 +12,13 @@ code {
     monospace;
 }
 
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px; 
+  justify-content: center; 
+  padding: 10px 0; 
+}
 
 .card {
   border: 1px solid #ccc;
@@ -39,7 +46,7 @@ code {
   margin: 8px;
   background-color: #f9f9f9;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 400px; 
+  max-width: 300px; 
   width: 100%; 
   box-sizing: border-box;
 }

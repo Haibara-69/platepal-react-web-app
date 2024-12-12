@@ -149,8 +149,9 @@ const Search = () => {
       </div>
       <br />
       <div className="results">
-        {type === "recipes" &&
-          results.map((recipe) => (
+        {type === "recipes" && (
+          <div className="card-grid">
+          {results.map((recipe) => (
             <div key={recipe._id} style={{ width: '300px', cursor: "pointer" }}
               onClick={() => navigate(`/details/${recipe._id}`)}>
               <div className='card'>
@@ -169,8 +170,11 @@ const Search = () => {
               </div>
             </div>
           ))}
-        {type === "users" &&
-          results.map((user) => (
+          </div>
+        )}
+        {type === "users" && (
+        <div className="card-grid">
+          {results.map((user) => (
             <div key={user._id} className="profile-card"
               onClick={() => navigate(`/profile/${user._id}`)} style={{ cursor: "pointer" }}>
             <h2>{user.username}</h2>
@@ -204,21 +208,26 @@ const Search = () => {
               (user.isFollowing ? (
                 <button
                   className="btn btn-secondary"
-                  onClick={() => handleUnfollow(user._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleUnfollow(user._id)}}
                 >
                   Unfollow
                 </button>
               ) : (
                 <button
                   className="btn btn-primary"
-                  onClick={() => handleFollow(user._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleFollow(user._id)}}
                 >
                   Follow
                 </button>
-              )
-            )}
-          </div>
+              ))}
+            </div>
           ))}
+        </div>
+      )}
       </div>
     </div>
   );
