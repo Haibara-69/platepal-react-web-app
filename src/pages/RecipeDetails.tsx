@@ -154,7 +154,8 @@ const RecipeDetails: React.FC = () => {
       </div>
       <p>{recipe.description}</p>
       <img
-        src={`http://localhost:8080${recipe.image}`}
+        //src={`http://localhost:8080${recipe.image}`}
+        src={`${process.env.REACT_APP_API_URL || "http://localhost:8080"}${recipe.image}`}
         className="card-img-top"
         alt={recipe.title}
         style={{ maxWidth: '50%', height: 'auto', marginBottom: '10px' }}
