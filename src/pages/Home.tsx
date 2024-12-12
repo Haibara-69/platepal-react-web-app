@@ -34,11 +34,17 @@ const Home: React.FC = () => {
             style={recipeCardStyle}
             onClick={() => navigate(`/details/${recipe._id}`)}
           >
-            <img
-              src={`http://localhost:8080${recipe.image}`}
-              alt={recipe.title}
+            {/* <img
+              src={`http://localhost:8080${recipe.image}`}           
+              alt={recipe.title} 
               style={imageStyle}
-            />
+            /> */}
+            <img
+                src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:8080"}${recipe.image}`}
+                alt={recipe.title}
+                style={imageStyle}
+              />
+
             <div style={cardContentStyle}>
               <h5 style={cardTitleStyle}>{recipe.title}</h5>
               <p style={cardDescriptionStyle}>

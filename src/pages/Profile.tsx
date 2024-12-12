@@ -224,7 +224,8 @@ const Profile: React.FC = () => {
                         <img
                           //src={`http://localhost:8080${recipe.image}`}
                           //src={`${process.env.REACT_APP_API_URL}${recipe.image}`}
-                          src={recipe.image.startsWith('http') ? recipe.image : `${process.env.REACT_APP_BACKEND_URL}${recipe.image}`}
+                          //src={recipe.image.startsWith('http') ? recipe.image : `${process.env.REACT_APP_BACKEND_URL}${recipe.image}`}
+                          src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:8080"}${recipe.image}`}
 
                           className="card-img-top"
                           alt={recipe?.title || 'Recipe Image'}
@@ -255,8 +256,8 @@ const Profile: React.FC = () => {
                       onClick={() => navigate(`/details/${recipe._id}`)}>
                       <div className="card">
                         <img
-                          //src={recipe?.image ? `http://localhost:8080${recipe.image}` : 'default-image.png'}
-                          src={`http://localhost:8080${recipe.image}`}
+                          src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:8080"}${recipe.image}`}
+                          //src={`http://localhost:8080${recipe.image}`}
                           className="card-img-top"
                           alt={recipe?.title || 'Favorite Recipe Image'}
                           style={{ width: '100%', height: '200px', objectFit: 'cover' }}
