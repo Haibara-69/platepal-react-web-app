@@ -15,6 +15,7 @@ const Profile: React.FC = () => {
   const [view, setView] = useState<'profile' | 'allUsers'>('profile'); // State to toggle views
   const currentUser = JSON.parse(localStorage.getItem('user') || '{}'); 
   const navigate = useNavigate();
+  //const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080";
 
   useEffect(() => {
     const loadUserProfile = async () => {
@@ -221,7 +222,8 @@ const Profile: React.FC = () => {
                       onClick={() => navigate(`/details/${recipe._id}`)}>
                       <div className="card">
                         <img
-                          src={`http://localhost:8080${recipe.image}`}
+                          //src={`http://localhost:8080${recipe.image}`}
+                          src={`${process.env.REACT_APP_API_URL}${recipe.image}`}
                           className="card-img-top"
                           alt={recipe?.title || 'Recipe Image'}
                           style={{ width: '100%', height: '200px', objectFit: 'cover' }}
