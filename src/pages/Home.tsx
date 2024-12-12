@@ -40,7 +40,7 @@ const Home: React.FC = () => {
               style={imageStyle}
             /> */}
             <img
-                src={`${process.env.REACT_APP_BACKEND_URL || "http://localhost:8080"}${recipe.image}`}
+                src={`${process.env.REACT_APP_API_URL || "http://localhost:8080"}${recipe.image}`}
                 alt={recipe.title}
                 style={imageStyle}
               />
